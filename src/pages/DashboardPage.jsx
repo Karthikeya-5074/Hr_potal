@@ -28,6 +28,6 @@ function DashboardPage() {
       </section>
     </div>
   );
-}
+
 
 export default DashboardPage;
