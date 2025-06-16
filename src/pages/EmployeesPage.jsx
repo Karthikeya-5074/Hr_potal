@@ -75,7 +75,7 @@ function EmployeesPage() {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((emp) => (
+            {filtered.length > 0 ? filtered.map((emp) => (
               <tr key={emp.id} className="border-t">
                 <td className="p-2">{emp.name}</td>
                 <td className="p-2">{emp.role}</td>
@@ -97,7 +97,11 @@ function EmployeesPage() {
                   </button>
                 </td>
               </tr>
-            ))}
+            )) : (
+              <tr className="border-t">
+                <td style={{textAlign: "center"}}>No Employee Found</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
