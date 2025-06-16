@@ -45,7 +45,7 @@ function Sidebar({ isOpen, toggle }) {
     <aside
       className={`${
         isOpen ? 'translate-x-0' : '-translate-x-full'
-      } md:translate-x-0 fixed md:static z-20 bg-gray-800 text-white w-64 h-full shadow-lg transition-transform duration-200`}
+      } md:translate-x-0 fixed md:static z-20 bg-gray-800 text-white w-64 h-auto shadow-lg transition-transform duration-200`}
     >
       <div className="p-4 text-xl font-bold border-b border-gray-700">HR Portal</div>
       <nav className="mt-4 flex flex-col space-y-1">
