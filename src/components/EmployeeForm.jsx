@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function EmployeeForm({ initialData = {}, onSave, onCancel }) {
+function EmployeeForm({ initialData = {}, onSave, onCancel, isSubmitting = false }) {
   const [form, setForm] = useState({
     name: initialData.name || '',
     role: initialData.role || '',
@@ -78,8 +78,12 @@ function EmployeeForm({ initialData = {}, onSave, onCancel }) {
         <button type="button" onClick={onCancel} className="px-4 py-2 rounded border">
           Cancel
         </button>
-        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
-          Save
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+        >
+          {isSubmitting ? 'Saving...' : 'Save'}
         </button>
       </div>
     </form>

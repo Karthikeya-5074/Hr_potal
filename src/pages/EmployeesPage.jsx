@@ -14,6 +14,7 @@ function EmployeesPage() {
   const [toDelete, setToDelete] = useState(null);
   const [toast, setToast] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 500);
@@ -34,15 +35,37 @@ function EmployeesPage() {
     setShowForm(true);
   };
 
-  const handleSave = (data) => {
+  const handleSave = async (data) => {
     if (editing) {
       updateEmployee(editing.id, data);
       setToast({ type: 'success', message: 'Employee updated' });
-    } else {
+      setShowForm(false);
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('http://172.18.4.178:8000/employees', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create employee');
+      }
+
+      await response.text();
       addEmployee(data);
       setToast({ type: 'success', message: 'Employee added' });
+      setShowForm(false);
+    } catch (err) {
+      setToast({ type: 'error', message: err.message || 'Error adding employee' });
+    } finally {
+      setIsSubmitting(false);
     }
-    setShowForm(false);
   };
 
   const handleDelete = () => {
@@ -86,6 +109,7 @@ function EmployeesPage() {
           initialData={editing || {}}
           onSave={handleSave}
           onCancel={() => setShowForm(false)}
+          isSubmitting={isSubmitting}
         />
       </Modal>
 
