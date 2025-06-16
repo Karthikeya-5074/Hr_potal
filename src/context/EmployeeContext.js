@@ -40,6 +40,10 @@ export function EmployeeProvider({ children }) {
 
   const [employees, setEmployees] = useState(initialEmployees);
 
+  const setEmployeesList = (list) => {
+    setEmployees(list);
+  };
+
   const addEmployee = (employee) => {
     setEmployees((prev) => [
       ...prev,
@@ -62,7 +66,13 @@ export function EmployeeProvider({ children }) {
 
   return (
     <EmployeeContext.Provider
-      value={{ employees, addEmployee, updateEmployee, deleteEmployee }}
+      value={{
+        employees,
+        addEmployee,
+        updateEmployee,
+        deleteEmployee,
+        setEmployees: setEmployeesList,
+      }}
     >
       {children}
     </EmployeeContext.Provider>

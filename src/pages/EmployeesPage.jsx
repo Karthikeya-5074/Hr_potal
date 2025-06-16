@@ -7,7 +7,12 @@ import Toast from '../components/Toast';
 import EmployeesTable from '../components/EmployeesTable';
 
 function EmployeesPage() {
-  const { employees, addEmployee, updateEmployee, deleteEmployee } = useEmployees();
+  const {
+    employees,
+    updateEmployee,
+    deleteEmployee,
+    setEmployees,
+  } = useEmployees();
   const [search, setSearch] = useState('');
   const [editing, setEditing] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -58,7 +63,14 @@ function EmployeesPage() {
       }
 
       await response.text();
-      addEmployee(data);
+
+      const listRes = await fetch('http://172.18.4.178:8000/employees');
+      if (!listRes.ok) {
+        throw new Error('Failed to fetch employees');
+      }
+      const list = await listRes.json();
+      setEmployees(list);
+
       setToast({ type: 'success', message: 'Employee added' });
       setShowForm(false);
     } catch (err) {
