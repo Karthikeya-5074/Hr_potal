@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useEmployees } from '../context/EmployeeContext';
 import Modal from '../components/Modal';
 import EmployeeForm from '../components/EmployeeForm';
 import ConfirmDialog from '../components/ConfirmDialog';
 import Toast from '../components/Toast';
+import EmployeesTable from '../components/EmployeesTable';
 
 function EmployeesPage() {
   const { employees, addEmployee, updateEmployee, deleteEmployee } = useEmployees();
@@ -12,6 +13,12 @@ function EmployeesPage() {
   const [showForm, setShowForm] = useState(false);
   const [toDelete, setToDelete] = useState(null);
   const [toast, setToast] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 500);
+    return () => clearTimeout(t);
+  }, []);
 
   const filtered = employees.filter((e) =>
     e.name.toLowerCase().includes(search.toLowerCase())
@@ -57,50 +64,22 @@ function EmployeesPage() {
         />
         <button
           onClick={handleAdd}
-          className="px-4 py-2 bg-blue-600 text-white rounded"
+          className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg text-white shadow-md w-full sm:w-auto text-center"
         >
           Add Employee
         </button>
       </div>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white rounded shadow">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="p-2">Name</th>
-              <th className="p-2">Role</th>
-              <th className="p-2">Department</th>
-              <th className="p-2">DOJ</th>
-              <th className="p-2">Status</th>
-              <th className="p-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((emp) => (
-              <tr key={emp.id} className="border-t">
-                <td className="p-2">{emp.name}</td>
-                <td className="p-2">{emp.role}</td>
-                <td className="p-2">{emp.department}</td>
-                <td className="p-2 whitespace-nowrap">{emp.doj}</td>
-                <td className="p-2">{emp.status}</td>
-                <td className="p-2 space-x-2">
-                  <button
-                    onClick={() => handleEdit(emp)}
-                    className="px-2 py-1 text-sm bg-yellow-500 text-white rounded"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => setToDelete(emp)}
-                    className="px-2 py-1 text-sm bg-red-600 text-white rounded"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {loading ? (
+        <div className="flex justify-center py-8">
+          <div className="h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      ) : (
+        <EmployeesTable
+          employees={filtered}
+          onEdit={handleEdit}
+          onDelete={setToDelete}
+        />
+      )}
 
       <Modal isOpen={showForm} onClose={() => setShowForm(false)}>
         <EmployeeForm
