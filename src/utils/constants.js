@@ -16,3 +16,9 @@ export const ONBOARDING_TASKS = [
   { id: 2, label: 'Setup payroll', completed: true },
   { id: 3, label: 'Sign policies', completed: false },
 ];
+
+export const INITIAL_EMPLOYEES = [
+  { id: 1, name: 'Alice Johnson', email: 'alice@example.com', role: 'Engineer' },
+  { id: 2, name: 'Bob Smith', email: 'bob@example.com', role: 'Designer' },
+  { id: 3, name: 'Carol Lee', email: 'carol@example.com', role: 'HR' },
+];
