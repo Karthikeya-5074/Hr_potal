@@ -22,9 +22,26 @@ function EmployeesPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(t);
-  }, []);
+    const fetchEmployees = async () => {
+      try {
+        const res = await fetch('http://172.18.4.178:8000/employees');
+        if (!res.ok) {
+          throw new Error('Failed to fetch employees');
+        }
+        const list = await res.json();
+        setEmployees(list);
+      } catch (err) {
+        setToast({
+          type: 'error',
+          message: err.message || 'Failed to fetch employees',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEmployees();
+  }, [setEmployees]);
 
   const filtered = employees.filter((e) =>
     e.name.toLowerCase().includes(search.toLowerCase())
