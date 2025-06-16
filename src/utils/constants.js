@@ -6,7 +6,6 @@ export const MOCK_USER = {
 };
 
 export const DASHBOARD_STATS = [
-  { label: 'Employees', value: 12 },
   { label: 'Active Onboarding', value: 3 },
   { label: 'Pending Documents', value: 5 },
 ];
