@@ -41,7 +41,7 @@ function EmployeesPage() {
     };
 
     fetchEmployees();
-  }, [setEmployees]);
+  }, []);
 
   const filtered = employees.filter((e) =>
     e.name.toLowerCase().includes(search.toLowerCase())
@@ -98,7 +98,7 @@ function EmployeesPage() {
   };
 
   const handleDelete = () => {
-    deleteEmployee(toDelete.id);
+    deleteEmployee(toDelete);
     setToast({ type: 'success', message: 'Employee deleted' });
     setToDelete(null);
   };

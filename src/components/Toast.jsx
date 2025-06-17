@@ -8,7 +8,7 @@ function Toast({ message, type = 'success', onClose }) {
 
   return (
     <div
-      className={`fixed bottom-4 right-4 px-4 py-2 rounded text-white shadow-lg transition-opacity ${
+      className={`fixed top-16 right-4 px-4 py-2 rounded text-white shadow-lg transition-opacity z-10 ${
         type === 'error' ? 'bg-red-500' : 'bg-green-600'
       }`}
     >

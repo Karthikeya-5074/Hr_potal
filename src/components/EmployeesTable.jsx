@@ -8,7 +8,7 @@ function EmployeesTable({ employees, onEdit, onDelete }) {
   }
 
   return (
-    <div className="overflow-x-auto max-w-screen-lg mx-auto">
+    <div className="overflow-x-auto max-w-screen-lg">
       <table className="table-auto w-full border text-left text-sm shadow-md">
         <thead className="bg-gray-100">
           <tr>
@@ -22,7 +22,7 @@ function EmployeesTable({ employees, onEdit, onDelete }) {
         </thead>
         <tbody>
           {employees.map((emp) => (
-            <tr key={emp.id} className="even:bg-gray-50">
+            <tr key={emp.emp_id} className="even:bg-gray-50">
               <td className="p-2">{emp.name}</td>
               <td className="p-2">{emp.role}</td>
               <td className="p-2">{emp.department}</td>
