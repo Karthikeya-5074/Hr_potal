@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useEmployees } from '../context/EmployeeContext';
 import Modal from '../components/Modal';
 import EmployeeForm from '../components/EmployeeForm';
 import ConfirmDialog from '../components/ConfirmDialog';
 import Toast from '../components/Toast';
 import EmployeesTable from '../components/EmployeesTable';
+import { getEmployees, createEmployee } from '../services/employeeService';
 
 function EmployeesPage() {
   const {
@@ -24,11 +25,7 @@ function EmployeesPage() {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const res = await fetch('http://172.18.4.178:8000/employees');
-        if (!res.ok) {
-          throw new Error('Failed to fetch employees');
-        }
-        const list = await res.json();
+        const list = await getEmployees();
         setEmployees(list);
       } catch (err) {
         setToast({
@@ -43,65 +40,54 @@ function EmployeesPage() {
     fetchEmployees();
   }, []);
 
-  const filtered = employees.filter((e) =>
-    e.name.toLowerCase().includes(search.toLowerCase())
+  const filtered = useMemo(
+    () =>
+      employees.filter((e) =>
+        e.name.toLowerCase().includes(search.toLowerCase())
+      ),
+    [employees, search]
   );
 
-  const handleAdd = () => {
+  const handleAdd = useCallback(() => {
     setEditing(null);
     setShowForm(true);
-  };
+  }, []);
 
-  const handleEdit = (emp) => {
+  const handleEdit = useCallback((emp) => {
     setEditing(emp);
     setShowForm(true);
-  };
+  }, []);
 
-  const handleSave = async (data) => {
-    if (editing) {
-      updateEmployee(editing.id, data);
-      setToast({ type: 'success', message: 'Employee updated' });
-      setShowForm(false);
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      const response = await fetch('http://172.18.4.178:8000/employees', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create employee');
+  const handleSave = useCallback(
+    async (data) => {
+      if (editing) {
+        updateEmployee(editing.id, data);
+        setToast({ type: 'success', message: 'Employee updated' });
+        setShowForm(false);
+        return;
       }
 
-      await response.text();
+      setIsSubmitting(true);
+      try {
+        const list = await createEmployee(data);
+        setEmployees(list);
 
-      const listRes = await fetch('http://172.18.4.178:8000/employees');
-      if (!listRes.ok) {
-        throw new Error('Failed to fetch employees');
+        setToast({ type: 'success', message: 'Employee added' });
+        setShowForm(false);
+      } catch (err) {
+        setToast({ type: 'error', message: err.message || 'Error adding employee' });
+      } finally {
+        setIsSubmitting(false);
       }
-      const list = await listRes.json();
-      setEmployees(list);
-
-      setToast({ type: 'success', message: 'Employee added' });
-      setShowForm(false);
-    } catch (err) {
-      setToast({ type: 'error', message: err.message || 'Error adding employee' });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    },
+    [editing, updateEmployee, setEmployees]
+  );
 
   const handleDelete = () => {
     deleteEmployee(toDelete);
     setToast({ type: 'success', message: 'Employee deleted' });
     setToDelete(null);
-  };
+  }, [deleteEmployee, toDelete]);
 
   return (
     <div className="space-y-4">
