@@ -87,7 +87,7 @@ function EmployeesPage() {
     deleteEmployee(toDelete);
     setToast({ type: 'success', message: 'Employee deleted' });
     setToDelete(null);
-  }, [deleteEmployee, toDelete]);
+  };
 
   return (
     <div className="space-y-4">
